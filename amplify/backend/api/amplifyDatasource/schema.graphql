@@ -1,0 +1,16 @@
+type Kid @model {
+  id: ID!
+  kidName: String!
+  monsterImageResourceName: String!
+  dateCreated: String!
+  kidUUID: String!
+}
+
+type User @model {
+  id: ID!
+  dateCreated: String!
+  userEmail: String!
+  userId: String!
+  kidz: [Kid!]!
+}
+
