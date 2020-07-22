@@ -4,15 +4,49 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     tools:context=".MainActivity">
 
-    <TextView
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <LinearLayout
+        android:layout_gravity="center"
+        android:orientation="horizontal"
+        android:id="@+id/indicator_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
+        android:layout_marginTop="@dimen/margin_5"
+        app:layout_constraintBottom_toTopOf="@id/add_kid_framelayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/add_kid_framelayout"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:textSize="@dimen/text_size_25"
+            android:textColor="@android:color/white"
+            android:layout_gravity="center"
+            android:id="@+id/add_kid"
+            android:background="@drawable/ktz_button_background"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_50"
+            android:layout_marginTop="@dimen/margin_30"
+            android:layout_marginEnd="@dimen/margin_60"
+            android:text="@string/ktz_add_kid"
+            android:textAllCaps="false"
+            android:layout_marginStart="@dimen/margin_60"
+            android:layout_marginBottom="@dimen/margin_50" />
+    </FrameLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
