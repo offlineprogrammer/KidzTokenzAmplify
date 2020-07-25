@@ -2,11 +2,13 @@ package com.offlineprogrammer.kidztokenzaws;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,23 +22,38 @@ import com.amplifyframework.core.Amplify;
 import com.amplifyframework.datastore.generated.model.Kid;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
 
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
     ProgressDialog progressBar;
+    AmplifyAWSHelper amplifyAWSHelper;
+
+
+    private Disposable disposable;
+    //private KidAdapter kidAdapter;
+    private ArrayList<Kid> kidzList = new ArrayList<>();
+    ViewPager2 view_pager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         configActionButton();
-
+      //  amplifyAWSHelper = new amplifyAWSHelper(getApplicationContext());
     }
+
+
 
     private void configActionButton() {
         Button add_kid = findViewById(R.id.add_kid);
@@ -47,6 +64,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void updateViewPager() {
+/*        kidAdapter = null;
+        kidAdapter = new KidAdapter(firebaseHelper.kidzStarz.getUser().getKidz(), this);
+        view_pager = findViewById(R.id.view_pager);
+        view_pager.setAdapter(kidAdapter);*/
+
+    }
+
 
     private void showAddKidDialog(Context c) {
 
@@ -108,11 +134,52 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void saveKid(Kid newKid) {
-        Amplify.DataStore.save(
-                newKid,
-                success -> Log.i("Tutorial", "Saved item: " + success.item().getKidName()),
-                error -> Log.e("Tutorial", "Could not save item to DataStore", error)
-        );
+
+        amplifyAWSHelper.saveKid(newKid).observeOn(Schedulers.io())
+                //.observeOn(Schedulers.m)
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Observer<Kid>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        Log.d(TAG, "onSubscribe");
+                        disposable = d;
+                    }
+
+                    @Override
+                    public void onNext(Kid kid) {
+                        Log.d(TAG, "onNext: " + kid.getKidName());
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                              //  amplifyAWSHelper.logEvent("kid_created");
+                                //updateViewPager(kid);
+                                updateViewPager();
+                                /*amplifyAWSHelper.updateKidzCollection(kid)
+                                        .subscribe(() -> {
+                                            Log.i(TAG, "updateKidzCollection: completed");
+                                            // handle completion
+                                        }, throwable -> {
+                                            // handle error
+                                        });*/
+                            }
+                        });
+
+
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, "onError: " + e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.d(TAG, "onComplete");
+                    }
+                });
+
+
 
     }
 

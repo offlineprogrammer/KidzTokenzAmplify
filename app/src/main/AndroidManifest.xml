@@ -4,20 +4,33 @@
     package="com.offlineprogrammer.kidztokenzaws">
 
     <application
-        android:name=".MyAmplifyApplication"
-        tools:replace="android:name"
+        android:name=".KidzTokenz"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.KidzTokenz.Autumn">
-        <activity android:name=".MainActivity">
+        android:theme="@style/Theme.KidzTokenz.Autumn"
+        tools:replace="android:name">
+        <activity android:name=".LoginActivity"
+            android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="kidztokenz" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".MainActivity"
+           >
+
         </activity>
     </application>
 

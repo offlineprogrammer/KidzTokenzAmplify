@@ -1,0 +1,118 @@
+# this is an auto generated file. This will be overwritten
+subscription OnCreateKid {
+  onCreateKid {
+    id
+    kidName
+    monsterImageResourceName
+    dateCreated
+    kidUUID
+    _version
+    _deleted
+    _lastChangedAt
+    createdAt
+    updatedAt
+  }
+}
+subscription OnUpdateKid {
+  onUpdateKid {
+    id
+    kidName
+    monsterImageResourceName
+    dateCreated
+    kidUUID
+    _version
+    _deleted
+    _lastChangedAt
+    createdAt
+    updatedAt
+  }
+}
+subscription OnDeleteKid {
+  onDeleteKid {
+    id
+    kidName
+    monsterImageResourceName
+    dateCreated
+    kidUUID
+    _version
+    _deleted
+    _lastChangedAt
+    createdAt
+    updatedAt
+  }
+}
+subscription OnCreateUser {
+  onCreateUser {
+    id
+    dateCreated
+    userEmail
+    userId
+    kidz {
+      id
+      kidName
+      monsterImageResourceName
+      dateCreated
+      kidUUID
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+    _version
+    _deleted
+    _lastChangedAt
+    createdAt
+    updatedAt
+  }
+}
+subscription OnUpdateUser {
+  onUpdateUser {
+    id
+    dateCreated
+    userEmail
+    userId
+    kidz {
+      id
+      kidName
+      monsterImageResourceName
+      dateCreated
+      kidUUID
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+    _version
+    _deleted
+    _lastChangedAt
+    createdAt
+    updatedAt
+  }
+}
+subscription OnDeleteUser {
+  onDeleteUser {
+    id
+    dateCreated
+    userEmail
+    userId
+    kidz {
+      id
+      kidName
+      monsterImageResourceName
+      dateCreated
+      kidUUID
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+    _version
+    _deleted
+    _lastChangedAt
+    createdAt
+    updatedAt
+  }
+}
