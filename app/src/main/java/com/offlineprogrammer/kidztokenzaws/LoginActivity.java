@@ -12,12 +12,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.amplifyframework.auth.AuthProvider;
 import com.amplifyframework.auth.cognito.AWSCognitoAuthSession;
 import com.amplifyframework.core.Amplify;
+import com.amplifyframework.datastore.generated.model.User;
+
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     ImageButton login_with_amazon;
     ProgressBar log_in_progress;
     Boolean isSignIn_Initializeds = false;
+    AmplifyAWSHelper amplifyAWSHelper;
+    private Disposable disposable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +32,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         login_with_amazon = findViewById(R.id.login_with_amazon);
         log_in_progress = findViewById(R.id.log_in_progress);
+        amplifyAWSHelper = new AmplifyAWSHelper(getApplicationContext());
 
         login_with_amazon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,7 +54,8 @@ public class LoginActivity extends AppCompatActivity {
                 result -> {
                     Log.i(TAG, "AuthQuickstart RESULT " + result.toString());
                     isSignIn_Initializeds = false;
-                    launchMainActivity();
+                    getUserData();
+                    //launchMainActivity();
                 },
 
                 error2 -> {
@@ -86,7 +95,8 @@ public class LoginActivity extends AppCompatActivity {
                         case SUCCESS:
                             Log.i(TAG, "AmplifySignedIn onStart::::    IdentityId: " + cognitoAuthSession.toString());
                             Log.i(TAG, "AmplifySignedInIdentityId: " + cognitoAuthSession.getIdentityId().getValue());
-                            launchMainActivity();
+                            getUserData();
+                            //launchMainActivity();
                             break;
                         case FAILURE:
                             enableLogin();
@@ -112,8 +122,83 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void getUserData() {
+        amplifyAWSHelper.getUserData().observeOn(Schedulers.io())
+                //.observeOn(Schedulers.m)
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Observer<User>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        Log.d(TAG, "onSubscribe");
+                        disposable = d;
+                    }
+
+                    @Override
+                    public void onNext(User user) {
+                        Log.d(TAG, "onNext: " + user.getUserId());
+                        Log.d(TAG, "onNext: m_User " + amplifyAWSHelper.kidzTokenz.getUser().getUserEmail());
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                launchMainActivity();
+                            }
+                        });
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        if (e != null) {
+
+                            Log.e(TAG, "onError: " + e.getMessage());
+
+                        }
 
 
+                        saveUser();
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.d(TAG, "onComplete");
+                    }
+                });
+
+    }
+
+    private void saveUser() {
+        amplifyAWSHelper.saveUser().observeOn(Schedulers.io())
+                //.observeOn(Schedulers.m)
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Observer<User>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        Log.d(TAG, "onSubscribe");
+                        disposable = d;
+                    }
+
+                    @Override
+                    public void onNext(User user) {
+                        Log.d(TAG, "onNext: " + user.getUserId());
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                launchMainActivity();
+                            }
+                        });
+
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, "onError: " + e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.d(TAG, "onComplete");
+                    }
+                });
     }
 
     private void launchMainActivity() {
